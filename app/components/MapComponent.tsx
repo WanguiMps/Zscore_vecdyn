@@ -9,33 +9,10 @@ import {
   useMap,
 } from "react-leaflet";
 import L from "leaflet";
+import type { WeeklyPoint, Season } from "../lib/types";
+import { getSeason } from "../lib/dateUtils";
 
-type Point = {
-  lat: number;
-  lng: number;
-  sampleLocation: string;
-  minDate: string;
-  maxDate: string;
-  weekRange: string;
-  totalSampleValue: number;
-  weeklySampleValueZscore: number;
-};
-
-type Season = "Spring" | "Summer" | "Autumn" | "Winter";
-
-function getSeason(dateStr: string): Season {
-  const monthFromIso = Number(dateStr.slice(5, 7));
-  const month =
-    Number.isInteger(monthFromIso) && monthFromIso >= 1 && monthFromIso <= 12
-      ? monthFromIso
-      : new Date(dateStr).getUTCMonth() + 1;
-  if (month >= 3 && month <= 5) return "Spring";
-  if (month >= 6 && month <= 8) return "Summer";
-  if (month >= 9 && month <= 11) return "Autumn";
-  return "Winter";
-}
-
-function FitBounds({ points }: { points: Point[] }) {
+function FitBounds({ points }: { points: WeeklyPoint[] }) {
   const map = useMap();
 
   useEffect(() => {
@@ -51,7 +28,7 @@ function FitBounds({ points }: { points: Point[] }) {
   return null;
 }
 
-export default function MapComponent({ points }: { points: Point[] }) {
+export default function MapComponent({ points }: { points: WeeklyPoint[] }) {
   const [isPlaying, setIsPlaying] = useState(true);
   const [frameIndex, setFrameIndex] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
